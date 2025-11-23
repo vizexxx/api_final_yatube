@@ -1,4 +1,7 @@
-Django==3.2.16
+Django>=3.2,<4.0
+django-filter>=21.0
+djangorestframework
+pytest-django
 pytest==6.2.4
 pytest-pythonpath==0.7.3
 pytest-django==4.4.0
