@@ -25,17 +25,19 @@ class CommentSerializer(serializers.ModelSerializer):
         slug_field='username',
         read_only=True
     )
+    post = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
-        fields = ('author', 'post', 'text', 'created', 'id')
+        fields = ('id', 'author', 'post', 'text', 'created')
         model = Comment
+        read_only_fields = ('author', 'post', 'created')
 
 
 class GroupSerializer(serializers.ModelSerializer):
     """Компоновщик-анализатор групп постов авторов."""
 
     class Meta:
-        fields = ('title', 'description')
+        fields = ('id', 'title', 'description')  # Добавлено 'id'
         model = Group
 
 
