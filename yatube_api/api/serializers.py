@@ -8,71 +8,80 @@ User = get_user_model()
 
 
 class PostSerializer(serializers.ModelSerializer):
-    """Компоновщик-анализатор текстовых постов авторов."""
-    author = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field='username'
-    )
-
-    class Meta:
-        fields = ('id', 'text', 'author', 'image', 'pub_date', 'group')
-        model = Post
-
-
-class CommentSerializer(serializers.ModelSerializer):
-    """Компоновщик-анализатор комментариев к текстовым постам авторов."""
+    """Сериализатор для публикаций пользователей."""
     author = serializers.SlugRelatedField(
         slug_field='username',
         read_only=True
     )
+
+    class Meta:
+        model = Post
+        fields = ('id', 'author', 'text', 'image', 'pub_date', 'group')
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    """Сериализатор для комментариев к публикациям."""
+    author = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
     post = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
-        fields = ('id', 'author', 'post', 'text', 'created')
         model = Comment
-        read_only_fields = ('author', 'post', 'created')
+        fields = ('id', 'post', 'author', 'text', 'created')
+        read_only_fields = ('post', 'author', 'created')
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    """Компоновщик-анализатор групп постов авторов."""
+    """Сериализатор для сообществ публикаций."""
 
     class Meta:
-        fields = ('id', 'title', 'slug', 'description')  # Добавлено 'slug'
         model = Group
+        fields = ('id', 'title', 'slug', 'description')
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    """Компоновщик-анализатор подписок на авторов."""
+    """Сериализатор для подписок на пользователей."""
     user = serializers.SlugRelatedField(
-        default=serializers.CurrentUserDefault(),
         read_only=True,
-        slug_field='username'
+        slug_field='username',
+        default=serializers.CurrentUserDefault()
     )
     following = serializers.SlugRelatedField(
         slug_field='username',
         queryset=User.objects.all()
     )
 
-    def validate(self, data):
-        user = self.context['request'].user
-        following = data['following']
-        if following == user:
+    def validate_following(self, value):
+        request = self.context.get('request')
+        if not request:
+            return value
+            
+        current_user = request.user
+        if value == current_user:
             raise serializers.ValidationError(
-                'Нельзя подписаться на самого себя!'
+                'Подписка на собственный аккаунт невозможна'
             )
-        elif Follow.objects.filter(user=user, following=following).exists():
+            
+        existing_follow = Follow.objects.filter(
+            user=current_user, 
+            following=value
+        ).exists()
+        
+        if existing_follow:
             raise serializers.ValidationError(
-                'Подписка уже создана ранее!'
+                'Вы уже подписаны на этого пользователя'
             )
-        else:
-            return data
+            
+        return value
 
     class Meta:
-        fields = ('user', 'following')
         model = Follow
+        fields = ('user', 'following')
         validators = [
             UniqueTogetherValidator(
                 queryset=Follow.objects.all(),
-                fields=('user', 'following', )
+                fields=['user', 'following']
             )
         ]
