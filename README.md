@@ -1,31 +1,27 @@
-# API_FINAL_YATUBE 
+# Yatube API
 
-API_Final - законченная версия API для yatube. 
+An API of a simple social network. Supports posts, comments, followers and authentications. Check the `redoc` endpoint for usage documentation.
 
-Стек: Python 3.7, Django Rest Framework, SQLite
+## Installation
 
-# Как запустить проект:
+Clone the project using `git clone`, switch into the created folder and do the following:
 
-- Клонировать репозиторий и перейти в него в командной строке:
-```
-git@github.com:LazarevaKate/api_final_yatube.git
-```
+1. Create and activate python virtual environment (e.g. using `venv`) and install the dependencies:
 
-- Cоздать и активировать виртуальное окружение:
 ```
-python3 -m venv env
-source env/bin/activate
-```
-- Установить зависимости из файла requirements.txt:
-```
-python3 -m pip install --upgrade pip
+python -m venv venv
+. .\venv\Scripts\activate.ps1
 pip install -r requirements.txt
 ```
-- Выполнить миграции:
+
+2. Apply the migrations:
+
 ```
-python3 manage.py migrate
+python .\yatube_api\manage.py migrate
 ```
-- Запустить проект:
+
+3. Run the server in debug mode:
+
 ```
-python3 manage.py runserver
+python .\yatube_api\manage.py runserver
 ```
