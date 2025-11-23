@@ -37,7 +37,7 @@ class GroupSerializer(serializers.ModelSerializer):
     """Компоновщик-анализатор групп постов авторов."""
 
     class Meta:
-        fields = ('id', 'title', 'description')
+        fields = ('id', 'title', 'slug', 'description')  # Добавлено 'slug'
         model = Group
 
 
