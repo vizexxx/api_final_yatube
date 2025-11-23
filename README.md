@@ -1,27 +1,43 @@
-# Yatube API
+### Как запустить проект:
 
-An API of a simple social network. Supports posts, comments, followers and authentications. Check the `redoc` endpoint for usage documentation.
-
-## Installation
-
-Clone the project using `git clone`, switch into the created folder and do the following:
-
-1. Create and activate python virtual environment (e.g. using `venv`) and install the dependencies:
+Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-python -m venv venv
-. .\venv\Scripts\activate.ps1
+git clone https://github.com/PupocheckVanushi/api_final_yatube.git 
+```
+
+```
+cd api_final_yatube
+```
+
+Cоздать и активировать виртуальное окружение:
+
+```
+python3 -m venv env
+```
+
+```
+source env/bin/activate
+```
+
+Установить зависимости из файла requirements.txt:
+
+```
+python3 -m pip install --upgrade pip
+```
+
+```
 pip install -r requirements.txt
 ```
 
-2. Apply the migrations:
+Выполнить миграции:
 
 ```
-python .\yatube_api\manage.py migrate
+python3 manage.py migrate
 ```
 
-3. Run the server in debug mode:
+Запустить проект:
 
 ```
-python .\yatube_api\manage.py runserver
+python3 manage.py runserver
 ```
